@@ -43,7 +43,7 @@ under the License.
 	<xsl:param name="body.margin.top" select="'1.5cm'"/>
 
 	<xsl:param name="body.margin.bottom" select="'1.5cm'"/>
-	<xsl:param name="region.after.extent" select="'1cm'"/>
+	<xsl:param name="region.after.extent" select="'1.5cm'"/>
 	<xsl:param name="page.margin.bottom" select="'1cm'"/>
 	<xsl:param name="title.margin.left" select="'0cm'"/>
 

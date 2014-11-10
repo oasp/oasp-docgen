@@ -42,7 +42,7 @@ under the License.
 	<xsl:param name="region.before.extent" select="'1cm'"/>
 	<xsl:param name="body.margin.top" select="'1.5cm'"/>
 
-	<xsl:param name="body.margin.bottom" select="'1.5cm'"/>
+	<xsl:param name="body.margin.bottom" select="'1.6cm'"/>
 	<xsl:param name="region.after.extent" select="'1.5cm'"/>
 	<xsl:param name="page.margin.bottom" select="'1cm'"/>
 	<xsl:param name="title.margin.left" select="'0cm'"/>
@@ -200,11 +200,6 @@ under the License.
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="Title">
-      This documentation is licensed under the 
-      <link xlink:href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons License (Attribution-NoDerivatives 4.0 International).</link>
-		</xsl:variable>
-
 		<xsl:choose>
 			<xsl:when test="$sequence='blank'">
 				<xsl:choose>
@@ -249,13 +244,18 @@ under the License.
 			</xsl:when>
 
 			<xsl:when test="$position='center'">
-				<xsl:value-of select="$Title"/>
+        <xsl:call-template name="footer.content.title" />
 			</xsl:when>
 
 			<xsl:otherwise>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+  <xsl:template name="footer.content.title">
+    This documentation is licensed under the
+      <link xlink:href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons License (Attribution-NoDerivatives 4.0 International).</link>
+  </xsl:template>
 
 	<xsl:template match="processing-instruction('hard-pagebreak')">
 		<fo:block break-before='page'/>
@@ -533,7 +533,7 @@ under the License.
 	<xsl:template match="xref">
 		<xsl:param name="insert.olink.pdf.frag" select="0"></xsl:param>
 	</xsl:template>
-	
+
 	<!-- admon -->
 	<xsl:param name="admon.graphics" select="0"/>
 

@@ -19,6 +19,7 @@
     <oasp.asciidoc.source>${basedir}/../${oasp.wiki.folder}/</oasp.asciidoc.source>
     <oasp.asciidoc.target>${basedir}/target/asciidoc/</oasp.asciidoc.target>
     <oasp.external.images>${basedir}/target/images/</oasp.external.images>
+    <oasp.pdf.customization>pdf.xsl</oasp.pdf.customization>
   </properties>
 
   <build>
@@ -36,13 +37,13 @@
             </goals>
             <configuration>
               <outputDirectory>${oasp4j.asciidoc.target}</outputDirectory>
-              <resources>          
+              <resources>
                 <resource>
                   <directory>${oasp4j.asciidoc.source}</directory>
                   <filtering>false</filtering>
                 </resource>
-              </resources>              
-            </configuration>            
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -119,7 +120,7 @@
           <includes>${oasp.wiki.page}.xml</includes>
           <xincludeSupported>true</xincludeSupported>
           <chunkedOutput>false</chunkedOutput>
-          <foCustomization>${basedir}/src/main/docbook/xsl/pdf.xsl</foCustomization>
+          <foCustomization>${basedir}/src/main/docbook/xsl/${oasp.pdf.customization}</foCustomization>
           <useExtensions>1</useExtensions>
           <highlightSource>1</highlightSource>
           <highlightXslthlConfig>${basedir}/src/main/docbook/xsl/xslthl-config.xml</highlightXslthlConfig>
@@ -162,10 +163,10 @@
           -->
         </executions>
       </plugin>
-      
+
     </plugins>
   </build>
-  
+
   <profiles>
     <profile>
       <id>oasp4j</id>
@@ -207,6 +208,7 @@
       <properties>
         <oasp.repo>tools-cobigen</oasp.repo>
         <oasp.wiki.page>CobiGen</oasp.wiki.page>
+        <oasp.pdf.customization>cobigen-pdf.xsl</oasp.pdf.customization>
       </properties>
     </profile>
   </profiles>

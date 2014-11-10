@@ -13,7 +13,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Default values -->
-    <oasp.repo>oasp-docgen</oasp.repo>
+    <oasp.repo>oasp4j</oasp.repo>
     <oasp.wiki.folder>${oasp.repo}.wiki</oasp.wiki.folder>
     <oasp.wiki.page>OASP4J</oasp.wiki.page>
     <oasp.asciidoc.source>${basedir}/../${oasp.wiki.folder}/</oasp.asciidoc.source>
@@ -210,10 +210,10 @@
       </properties>
     </profile>
     <profile>
-      <id>oasp-codegen</id>
+      <id>cobigen</id>
       <properties>
-        <oasp.repo>oasp-docgen</oasp.repo>
-        <oasp.wiki.page>Home</oasp.wiki.page>
+        <oasp.repo>tools-cobigen</oasp.repo>
+        <oasp.wiki.page>CobiGen</oasp.wiki.page>
       </properties>
     </profile>
   </profiles>

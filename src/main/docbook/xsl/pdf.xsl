@@ -253,8 +253,11 @@ under the License.
 	</xsl:template>
 
   <xsl:template name="footer.content.title">
-    This documentation is licensed under the
-      <link xlink:href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons License (Attribution-NoDerivatives 4.0 International).</link>
+    <xsl:variable name="Text">
+      This documentation is licensed under the
+      <link xlink:url="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons License (Attribution-NoDerivatives 4.0 International).</link>
+    </xsl:variable>
+    <xsl:value-of select="$Text"/>
   </xsl:template>
 
 	<xsl:template match="processing-instruction('hard-pagebreak')">

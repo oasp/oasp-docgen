@@ -12,8 +12,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <!-- Default values-->
-    <oasp.repo>oasp4j</oasp.repo>
+    <!-- Default values -->
+    <oasp.repo>oasp-docgen</oasp.repo>
     <oasp.wiki.folder>${oasp.repo}.wiki</oasp.wiki.folder>
     <oasp.wiki.page>OASP4J</oasp.wiki.page>
     <oasp.asciidoc.source>${basedir}/../${oasp.wiki.folder}/</oasp.asciidoc.source>
@@ -24,28 +24,28 @@
   <build>
     <plugins>
       <!--
-      <plugin>
+        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${oasp4j.asciidoc.target}</outputDirectory>
-              <resources>          
-                <resource>
-                  <directory>${oasp4j.asciidoc.source}</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
+        <execution>
+        <id>copy-resources</id>
+        <phase>validate</phase>
+        <goals>
+        <goal>copy-resources</goal>
+        </goals>
+        <configuration>
+        <outputDirectory>${oasp4j.asciidoc.target}</outputDirectory>
+        <resources>
+        <resource>
+        <directory>${oasp4j.asciidoc.source}</directory>
+        <filtering>false</filtering>
+        </resource>
+        </resources>
+        </configuration>
+        </execution>
         </executions>
-      </plugin>
+        </plugin>
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +90,7 @@
         <artifactId>asciidoctor-maven-plugin</artifactId>
         <version>1.5.0</version>
         <configuration>
-          <!--<backend>pdf</backend>-->
+          <!--<backend>pdf</backend> -->
           <backend>docbook5</backend>
           <sourceDirectory>${oasp.asciidoc.target}</sourceDirectory>
           <sourceDocumentName>${oasp.wiki.page}.asciidoc</sourceDocumentName>
@@ -110,6 +110,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>com.agilejava.docbkx</groupId>
         <artifactId>docbkx-maven-plugin</artifactId>
@@ -148,7 +149,13 @@
             </goals>
             <phase>generate-resources</phase>
           </execution>
-          <!--
+          <execution>
+            <id>html</id>
+            <goals>
+              <goal>generate-html</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
           <execution>
             <id>epub</id>
             <goals>
@@ -156,16 +163,16 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <epubCustomization>${basedir}/src/main/docbook/xsl/epub.xsl</epubCustomization>
+
+              <targetDirectory>${basedir}/target/generated-docs/epub</targetDirectory>
+              <!-- <epubCustomization>${basedir}/src/main/docbook/xsl/epub.xsl</epubCustomization> -->
             </configuration>
           </execution>
-          -->
         </executions>
       </plugin>
-      
     </plugins>
   </build>
-  
+
   <profiles>
     <profile>
       <id>oasp4j</id>
@@ -203,10 +210,10 @@
       </properties>
     </profile>
     <profile>
-      <id>cobigen</id>
+      <id>oasp-codegen</id>
       <properties>
-        <oasp.repo>tools-cobigen</oasp.repo>
-        <oasp.wiki.page>CobiGen</oasp.wiki.page>
+        <oasp.repo>oasp-docgen</oasp.repo>
+        <oasp.wiki.page>Home</oasp.wiki.page>
       </properties>
     </profile>
   </profiles>

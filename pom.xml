@@ -210,13 +210,5 @@
         <oasp.wiki.page>OASP4JS-Tutorial</oasp.wiki.page>
       </properties>
     </profile>
-    <profile>
-      <id>cobigen</id>
-      <properties>
-        <oasp.repo>tools-cobigen</oasp.repo>
-        <oasp.wiki.page>CobiGen</oasp.wiki.page>
-        <oasp.pdf.customization>cobigen-pdf.xsl</oasp.pdf.customization>
-      </properties>
-    </profile>
   </profiles>
 </project>

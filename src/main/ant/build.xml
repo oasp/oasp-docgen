@@ -48,7 +48,7 @@
             var text = self.getToken();
             if (text.startsWith('[[')) {
               var index = text.indexOf(']]');
-              self.setToken(text.substring(0, index).toLowerCase().replaceAll(' ','-') + text.substring(index));
+              self.setToken(text.substring(0, index).toLowerCase().replace(' ','-') + text.substring(index));
             }
           </scriptfilter>
         </tokenfilter>

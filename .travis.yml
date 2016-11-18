@@ -4,5 +4,5 @@ script:
   - cd ..
   - git clone https://github.com/oasp/oasp4j.wiki.git
   - cd oasp-docgen
-  - mvn site -Poasp4j
+  - mvn package -Poasp4j
 sudo: false

@@ -76,9 +76,9 @@
                           <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>
                           <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
                           <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>  
-                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>
-                          <scriptfilter language="javascript">
-                            var text = self.getToken();
+                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>                          
+                          <scriptfilter language="javascript">                            
+                          var text = self.getToken();
                             if (text.startsWith('[[')) {
                             var index = text.indexOf(']]');
                             self.setToken(text.substring(0,
@@ -112,7 +112,7 @@
                             }
                             self.setToken(text);
                            </scriptfilter>   
-                           <scriptfilter language="javascript">
+                          <scriptfilter language="javascript">
                             var text = self.getToken();
                             var expr = /[&lt;][&lt;]([^,]+)(,)/g;
                             var result = text.match(expr);
@@ -134,8 +134,6 @@
                     </copy>
                   </sequential>
                 </for>
-                
-                
 
                 <copy todir="${oasp.asciidoc.target}">
                   <path>
@@ -266,4 +264,17 @@
       </build>
     </profile>
   </profiles>
+
+  <distributionManagement>
+    <repository>
+      <id>devon.releases</id>
+      <name>Devon Nexus Releases</name>
+      <url>https://devon.s2-eu.capgemini.com/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>devon.snapshots</id>
+      <name>Devon Nexus Snapshots</name>
+      <url>https://devon.s2-eu.capgemini.com/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>

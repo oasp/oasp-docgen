@@ -70,22 +70,13 @@
                       <filterchain>
                         <tokenfilter>
                           <linetokenizer/>
-                          <scriptfilter language="javascript">
-                            var text = self.getToken();
-                            if (text.startsWith('= ')) {
-                                var index = text.length;
-                                //text = text.replace(/-/g, " ");
-                                //text = text.substring(0, index).toLowerCase().split(' ').join('_');
-                                self.setToken(text);
-                            }
-                          </scriptfilter>
                           <replaceregex pattern="\[\[" replace="[[${filename}_" flags="g"/>
                           <replaceregex pattern="^(==+) (.*)" replace="[[${filename}_\2]]${line.separator}\1 \2" flags="g"/>
                           <replaceregex pattern="^(=) (.*)" replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
                           <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>
                           <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
                           <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>  
-                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/> -->
+                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>
                           <scriptfilter language="javascript">
                             var text = self.getToken();
                             if (text.startsWith('[[')) {
@@ -127,8 +118,13 @@
                             var result = text.match(expr);
                             if(result){
                               for (var i in result){
-                                  var element = result[i].toLowerCase();
-                                  text = text.replace(result[i], element);
+                                  var element = result[i];
+                                  var indexA = element.indexOf('#');
+                                  var indexB = element.indexOf(',');
+                                  var section = element.substring(indexA+1, indexB);
+                                  var replacement = section.toLowerCase();
+                                  var nextReplacement = element.replace(section, replacement);
+                                  text = text.replace(element, nextReplacement);
                               }
                               self.setToken(text);
                           }

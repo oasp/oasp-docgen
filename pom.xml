@@ -86,7 +86,7 @@
                             }
                           </scriptfilter>
                           <scriptfilter language="javascript">
-                             // This script is used for transforming the links to sections (E.g.: link:Home#some_section) to case insensitive
+                             // This script is used for transforming the links to sections (E.g.: link:Home#some_section) to case insensitive.
                              var text = self.getToken();
                              // First we match the regular expression
                              var expr = /link:([^#:]*)#([^#:]*)\[([^#:]*)\]/g;

@@ -1,5 +1,5 @@
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 script:
   - cd ..
   - git clone https://github.com/devonfw/tools-cobigen.wiki.git

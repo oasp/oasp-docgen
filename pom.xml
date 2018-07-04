@@ -28,6 +28,37 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[1.8,1.9)</version>
+                  <message>[ERROR]: Only java8 is supported, please install it.</message>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.7</version>
         <dependencies>
@@ -78,40 +109,47 @@
                           <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>  
                           <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>                          
                           <scriptfilter language="javascript">                            
-                          var text = self.getToken();
+                            var text = self.getToken();
                             if (text.startsWith('[[')) {
-                            var index = text.indexOf(']]');
-                            self.setToken(text.substring(0,
-                            index).trim().toLowerCase().replace(/ /g,'-') + text.substring(index));
+                              var index = text.indexOf(']]');
+                              self.setToken(text.substring(0, index).trim()
+                                .replace(/ /g,'-')
+                                .replace(/\?/g,'')
+                                .replace(/Â\¿/g,'')
+                                .replace(/!/g,'')
+                                .replace(/Â\¡/g,'')
+                                .replace(/\./g,'')
+								.replace(/\'/g,'')
+                                .toLowerCase() + text.substring(index));
                             }
                           </scriptfilter>
                           <scriptfilter language="javascript">
-                             // This script is used for transforming the links to sections (E.g.: link:Home#some_section) to case insensitive.
-                             var text = self.getToken();
-                             // First we match the regular expression
-                             var expr = /link:([^#:]*)#([^#:]*)\[([^#:]*)\]/g;
-                             var result = text.match(expr);  
-                             var replacement = "null";
-                             // We traverse through all the links retrieved
-                             for (var i in result) {
-                                    var element = result[i];
-                          // We try to get the strings for making them lower case
-                          var indexA = element.indexOf('link:');
-                                    var indexB = element.indexOf('#');
-                                    fileName = element.substring(indexA+5, indexB);
+                            // This script is used for transforming the links to sections (E.g.: link:Home#some_section) to case insensitive.
+                            var text = self.getToken();
+                            // First we match the regular expression
+                            var expr = /link:([^#:]*)#([^#:]*)\[([^#:]*)\]/g;
+                            var result = text.match(expr);  
+                            var replacement = "null";
+                            // We traverse through all the links retrieved
+                            for (var i in result) {
+                              var element = result[i];
+                              // We try to get the strings for making them lower case
+                              var indexA = element.indexOf('link:');
+                              var indexB = element.indexOf('#');
+                              fileName = element.substring(indexA+5, indexB);
                                     
-                                    indexA = element.indexOf('[');
-                                    section = element.substring(indexB+1, indexA).toLowerCase();
+                              indexA = element.indexOf('[');
+                              section = element.substring(indexB+1, indexA).toLowerCase();
                                     
-                                    var indexC = element.indexOf(']');
-                                    hyperlink = element.substring(indexA+1, indexC);
+                              var indexC = element.indexOf(']');
+                              hyperlink = element.substring(indexA+1, indexC);
                                     
-                          // We replace the text
-                          replacement = element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
-                          text = text.replace(element, replacement);
+                              // We replace the text
+                              replacement = element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
+                              text = text.replace(element, replacement);
                             }
                             self.setToken(text);
-                           </scriptfilter>   
+                          </scriptfilter>   
                           <scriptfilter language="javascript">
                             var text = self.getToken();
                             var expr = /[&lt;][&lt;]([^,]+)(,)/g;
@@ -127,7 +165,7 @@
                                   text = text.replace(element, nextReplacement);
                               }
                               self.setToken(text);
-                          }
+                            }
                           </scriptfilter>                       
                         </tokenfilter>
                       </filterchain>

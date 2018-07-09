@@ -227,6 +227,8 @@
                     <fileset dir="${oasp.asciidoc.source}">
                       <exclude name="**/*.asciidoc"/>
 					  <exclude name="**/target/**"/>
+					  <!-- exclude local m2 repository in Jenkins builds -->
+					  <exclude name="**/.repository/**"/>
                     </fileset>
                   </path>
                 </copy>

@@ -98,7 +98,7 @@
               <rules>
                 <requireJavaVersion>
                   <version>[1.8,1.9)</version>
-                  <message>[ERROR]: Only Java8 is supported at the moment. Please executing maven with Java8.</message>
+                  <message>[ERROR]: Only Java8 is supported at the moment. Please execute maven with Java8.</message>
                 </requireJavaVersion>
               </rules>
             </configuration>

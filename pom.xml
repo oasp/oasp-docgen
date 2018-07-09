@@ -76,12 +76,14 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>3.0.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-site-renderer</artifactId>
+            <version>1.8.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
-      <dependency>
-        <groupId>org.apache.maven.doxia</groupId>
-        <artifactId>doxia-site-renderer</artifactId>
-        <version>1.8.1</version>
-      </dependency>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -166,7 +168,8 @@
                             if (text.startsWith('[[')) {
                             var index = text.indexOf(']]');
                             self.setToken(text.substring(0, index).trim()
-                            .replace(/ /g,'-')
+                            .replace(/
+                            /g,'-')
                             .replace(/\?/g,'')
                             .replace(/Â\¿/g,'')
                             .replace(/!/g,'')
@@ -186,23 +189,31 @@
                             var
                             result = text.match(expr);
                             var replacement = "null";
-                            // We traverse through all the links retrieved
+                            // We traverse through all the links
+                            retrieved
                             for (var i in result) {
                             var element = result[i];
-                            // We try to get the strings for making them lower case
+                            // We try to get the strings for
+                            making them lower case
                             var indexA = element.indexOf('link:');
-                            var indexB = element.indexOf('#');
+                            var indexB =
+                            element.indexOf('#');
                             fileName = element.substring(indexA+5, indexB);
 
-                            indexA = element.indexOf('[');
+                            indexA =
+                            element.indexOf('[');
                             section = element.substring(indexB+1, indexA).toLowerCase();
 
-                            var indexC = element.indexOf(']');
+                            var indexC
+                            = element.indexOf(']');
                             hyperlink = element.substring(indexA+1, indexC);
 
-                            // We replace the text
-                            replacement = element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
-                            text = text.replace(element, replacement);
+                            // We replace the
+                            text
+                            replacement =
+                            element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
+                            text =
+                            text.replace(element, replacement);
                             }
                             self.setToken(text);
                           </scriptfilter>
@@ -219,7 +230,8 @@
                             var section = element.substring(indexA+1, indexB);
                             var replacement = section.toLowerCase();
                             var nextReplacement = element.replace(section, replacement);
-                            text = text.replace(element, nextReplacement);
+                            text = text.replace(element,
+                            nextReplacement);
                             }
                             self.setToken(text);
                             }

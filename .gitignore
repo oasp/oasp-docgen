@@ -1,1 +1,17 @@
 /target
+/.settings
+*.class
+*.classpath
+*.project
+*.iml
+.*
+target/
+jsclient/
+eclipse-target/
+**/src/generated/
+**/tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear

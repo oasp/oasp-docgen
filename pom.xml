@@ -98,8 +98,7 @@
               <rules>
                 <requireJavaVersion>
                   <version>[1.8,1.9)</version>
-                  <message>[ERROR]: Your Java version is not the correct one, only Java8 is supported for using this
-                    tool. Please install it.</message>
+                  <message>[ERROR]: Only Java8 is supported at the moment. Please executing maven with Java8.</message>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -151,89 +150,69 @@
                         <tokenfilter>
                           <linetokenizer/>
                           <replaceregex pattern="\[\[" replace="[[${filename}_" flags="g"/>
-                          <replaceregex pattern="^(==+) (.*)"
-                            replace="[[${filename}_\2]]${line.separator}\1 \2" flags="g"/>
-                          <replaceregex pattern="^(=) (.*)"
-                            replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
-                          <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc["
-                            flags="g"/>
-                          <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]"
-                            replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
-                          <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>"
-                            flags="g"/>
-                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]"
-                            replace="link:\1#${filename}_\2[\3]" flags="g"/>
+                          <replaceregex pattern="^(==+) (.*)" replace="[[${filename}_\2]]${line.separator}\1 \2" flags="g"/>
+                          <replaceregex pattern="^(=) (.*)" replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
+                          <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>
+                          <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
+                          <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>
+                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>
                           <scriptfilter language="javascript">
                             var text = self.getToken();
                             if (text.startsWith('[[')) {
-                            var index = text.indexOf(']]');
-                            self.setToken(text.substring(0, index).trim()
-                            .replace(/
-                            /g,'-')
-                            .replace(/\?/g,'')
-                            .replace(/Â\¿/g,'')
-                            .replace(/!/g,'')
-                            .replace(/Â\¡/g,'')
-                            .replace(/\./g,'')
-                            .replace(/\'/g,'')
-                            .toLowerCase() + text.substring(index));
+                              var index = text.indexOf(']]');
+                              self.setToken(text.substring(0, index).trim()
+                                .replace(/ /g,'-')
+                                .replace(/\?/g,'')
+                                .replace(/Â\¿/g,'')
+                                .replace(/!/g,'')
+                                .replace(/Â\¡/g,'')
+                                .replace(/\./g,'')
+                                .replace(/\'/g,'')
+                                .toLowerCase() + text.substring(index));
                             }
                           </scriptfilter>
                           <scriptfilter language="javascript">
-                            // This script is used for transforming the links to
-                            sections (E.g.: link:Home#some_section) to case insensitive.
+                            // This script is used for transforming the links to sections (E.g.: link:Home#some_section) to case insensitive.
                             var text = self.getToken();
-                            //
-                            First we match the regular expression
+                            // First we match the regular expression
                             var expr = /link:([^#:]*)#([^#:]*)\[([^#:]*)\]/g;
-                            var
-                            result = text.match(expr);
+                            var result = text.match(expr);
                             var replacement = "null";
-                            // We traverse through all the links
-                            retrieved
+                            // We traverse through all the links retrieved
                             for (var i in result) {
-                            var element = result[i];
-                            // We try to get the strings for
-                            making them lower case
-                            var indexA = element.indexOf('link:');
-                            var indexB =
-                            element.indexOf('#');
-                            fileName = element.substring(indexA+5, indexB);
-
-                            indexA =
-                            element.indexOf('[');
-                            section = element.substring(indexB+1, indexA).toLowerCase();
-
-                            var indexC
-                            = element.indexOf(']');
-                            hyperlink = element.substring(indexA+1, indexC);
-
-                            // We replace the
-                            text
-                            replacement =
-                            element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
-                            text =
-                            text.replace(element, replacement);
+                              var element = result[i];
+                              // We try to get the strings for making them lower case
+                              var indexA = element.indexOf('link:');
+                              var indexB = element.indexOf('#');
+                              fileName = element.substring(indexA+5, indexB);
+  
+                              indexA = element.indexOf('[');
+                              section = element.substring(indexB+1, indexA).toLowerCase();
+  
+                              var indexC = element.indexOf(']');
+                              hyperlink = element.substring(indexA+1, indexC);
+  
+                              // We replace the text
+                              replacement = element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
+                              text = text.replace(element, replacement);
                             }
                             self.setToken(text);
                           </scriptfilter>
                           <scriptfilter language="javascript">
                             var text = self.getToken();
-                            var expr =
-                            /[&lt;][&lt;]([^,]+)(,)/g;
+                            var expr = /[&lt;][&lt;]([^,]+)(,)/g;
                             var result = text.match(expr);
                             if(result){
-                            for (var i in result){
-                            var element = result[i];
-                            var indexA = element.indexOf('#');
-                            var indexB = element.indexOf(',');
-                            var section = element.substring(indexA+1, indexB);
-                            var replacement = section.toLowerCase();
-                            var nextReplacement = element.replace(section, replacement);
-                            text = text.replace(element,
-                            nextReplacement);
-                            }
-                            self.setToken(text);
+                              for (var i in result){
+                                var element = result[i];
+                                var indexA = element.indexOf('#');
+                                var indexB = element.indexOf(',');
+                                var section = element.substring(indexA+1, indexB);
+                                var replacement = section.toLowerCase();
+                                var nextReplacement = element.replace(section, replacement);
+                                text = text.replace(element, nextReplacement);
+                              }
+                              self.setToken(text);
                             }
                           </scriptfilter>
                         </tokenfilter>
@@ -281,12 +260,8 @@
         </dependencies>
         <configuration>
           <sourceDirectory>${oasp.asciidoc.target}</sourceDirectory>
-          <!-- <baseDir>${basedir}</baseDir> -->
           <imagesDir>${oasp.external.images}</imagesDir>
           <headerFooter>true</headerFooter>
-          <!-- <attributes>
-            <sourcedir>${project.build.sourceDirectory}</sourcedir>
-            </attributes> -->
         </configuration>
       </plugin>
     </plugins>

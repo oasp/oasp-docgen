@@ -220,6 +220,16 @@
                     </copy>
                   </sequential>
                 </for>
+
+				<!-- Copy images and further resources of the wiki -->
+                <copy todir="${oasp.asciidoc.target}">
+                  <path>
+                    <fileset dir="${oasp.asciidoc.source}">
+                      <exclude name="**/*.asciidoc"/>
+					  <exclude name="**/target/**"/>
+                    </fileset>
+                  </path>
+                </copy>
               </target>
             </configuration>
             <goals>

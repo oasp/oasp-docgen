@@ -145,7 +145,7 @@
                     <var name="currentfilename" unset="true"/>
                     <basename property="currentfilename" file="@{asciidoc-file}" suffix=".asciidoc"/>
                     <basename property="filename" file="@{asciidoc-file}" suffix=".asciidoc"/>
-                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}">
+                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}" encoding="${project.build.sourceEncoding}">
                       <filterchain>
                         <tokenfilter>
                           <linetokenizer/>
@@ -222,7 +222,7 @@
                 </for>
 
 				<!-- Copy images and further resources of the wiki -->
-                <copy todir="${oasp.asciidoc.target}">
+                <copy todir="${oasp.asciidoc.target}" encoding="${project.build.sourceEncoding}">
                   <path>
                     <fileset dir="${oasp.asciidoc.source}">
                       <exclude name="**/*.asciidoc"/>

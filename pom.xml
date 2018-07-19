@@ -145,7 +145,7 @@
                     <var name="currentfilename" unset="true"/>
                     <basename property="currentfilename" file="@{asciidoc-file}" suffix=".asciidoc"/>
                     <basename property="filename" file="@{asciidoc-file}" suffix=".asciidoc"/>
-                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}" encoding="${project.build.sourceEncoding}">
+                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}">
                       <filterchain>
                         <tokenfilter>
                           <linetokenizer/>
@@ -154,9 +154,9 @@
                           <replaceregex pattern="^(=) (.*)" replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
                           <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>
                           <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
-                          <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>
-                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>
-                          <scriptfilter language="javascript">
+                          <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>  
+                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>                          
+                          <scriptfilter language="javascript">                            
                             var text = self.getToken();
                             if (text.startsWith('[[')) {
                               var index = text.indexOf(']]');
@@ -176,7 +176,7 @@
                             var text = self.getToken();
                             // First we match the regular expression
                             var expr = /link:([^#:]*)#([^#:]*)\[([^#:]*)\]/g;
-                            var result = text.match(expr);
+                            var result = text.match(expr);  
                             var replacement = "null";
                             // We traverse through all the links retrieved
                             for (var i in result) {
@@ -185,36 +185,36 @@
                               var indexA = element.indexOf('link:');
                               var indexB = element.indexOf('#');
                               fileName = element.substring(indexA+5, indexB);
-  
+                                    
                               indexA = element.indexOf('[');
                               section = element.substring(indexB+1, indexA).toLowerCase();
-  
+                                    
                               var indexC = element.indexOf(']');
                               hyperlink = element.substring(indexA+1, indexC);
-  
+                                    
                               // We replace the text
                               replacement = element.replace(element,"&lt;&lt;"+fileName+"#"+section+","+hyperlink+">>");
                               text = text.replace(element, replacement);
                             }
                             self.setToken(text);
-                          </scriptfilter>
+                          </scriptfilter>   
                           <scriptfilter language="javascript">
                             var text = self.getToken();
                             var expr = /[&lt;][&lt;]([^,]+)(,)/g;
                             var result = text.match(expr);
                             if(result){
                               for (var i in result){
-                                var element = result[i];
-                                var indexA = element.indexOf('#');
-                                var indexB = element.indexOf(',');
-                                var section = element.substring(indexA+1, indexB);
-                                var replacement = section.toLowerCase();
-                                var nextReplacement = element.replace(section, replacement);
-                                text = text.replace(element, nextReplacement);
+                                  var element = result[i];
+                                  var indexA = element.indexOf('#');
+                                  var indexB = element.indexOf(',');
+                                  var section = element.substring(indexA+1, indexB);
+                                  var replacement = section.toLowerCase();
+                                  var nextReplacement = element.replace(section, replacement);
+                                  text = text.replace(element, nextReplacement);
                               }
                               self.setToken(text);
                             }
-                          </scriptfilter>
+                          </scriptfilter>                       
                         </tokenfilter>
                       </filterchain>
                     </copy>

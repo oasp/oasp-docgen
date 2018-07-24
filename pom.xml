@@ -18,7 +18,7 @@
     <oasp.asciidoc.target>${basedir}/target/asciidoc/</oasp.asciidoc.target>
     <oasp.external.images>${basedir}/target/generated-docs/</oasp.external.images>
 
-    <asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
+    <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
     <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
     <asciidoctorj.version>1.5.6</asciidoctorj.version>
     <jruby.version>9.1.3.0</jruby.version>
@@ -145,30 +145,41 @@
                     <var name="currentfilename" unset="true"/>
                     <basename property="currentfilename" file="@{asciidoc-file}" suffix=".asciidoc"/>
                     <basename property="filename" file="@{asciidoc-file}" suffix=".asciidoc"/>
-                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}" >
+                    <copy file="@{asciidoc-file}" todir="${oasp.asciidoc.target}" encoding="${project.build.sourceEncoding}" outputencoding="${project.reporting.outputEncoding}">
                       <filterchain>
                         <tokenfilter>
                           <linetokenizer/>
-                          <replaceregex pattern="\[\[" replace="[[${filename}_" flags="g"/>
-                          <replaceregex pattern="^(==+) (.*)" replace="[[${filename}_\2]]${line.separator}\1 \2" flags="g"/>
-                          <replaceregex pattern="^(=) (.*)" replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
-                          <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>
-                          <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${filename}_\1,\2>>" flags="g"/>
+                          <replaceregex pattern="\[\[" replace="[[${currentfilename}_" flags="g"/>
+                          <replaceregex pattern="^(==+) (.*)" replace="[[${currentfilename}_\2]]${line.separator}\1 \2" flags="g"/>                          
+                          <replaceregex pattern="include\:\:([^.]*)\[" replace="include::\1.asciidoc[" flags="g"/>                         
                           <replaceregex pattern="link:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;\1,\2>>" flags="g"/>
-                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#${filename}_\2[\3]" flags="g"/>
+                          <replaceregex pattern="link:([^#:]*)#([^#:]*)\[([^#:]*)\]" replace="link:\1#\1_\2[\3]" flags="g"/>
                           <scriptfilter language="javascript">
+                            // This script is used for removing special characters from titles like: [[Title]]
                             var text = self.getToken();
                             if (text.startsWith('[[')) {
                               var index = text.indexOf(']]');
+                              var content = text.substring(2, index).trim();
+                              var regExpression = /([^_]+)/g;
+                              var regResult = content.match(regExpression);
+                              if (regResult){
+                                var section = regResult[regResult.length-1];        
+                                text = text.replace(section, section.toLowerCase());
+                              }
+
                               self.setToken(text.substring(0, index).trim()
-                                .replace(/ /g,'-')
+                                .replace(/ /g,'')
                                 .replace(/\?/g,'')
-                                .replace(/Â\¿/g,'')
+                                .replace(/\¿/g,'')
                                 .replace(/!/g,'')
-                                .replace(/Â\¡/g,'')
+                                .replace(/\¡/g,'')
                                 .replace(/\./g,'')
                                 .replace(/\'/g,'')
-                                .toLowerCase() + text.substring(index));
+                                .replace(/:/g,'')
+                                .replace(/\(/g,'')
+                                .replace(/\)/g,'')
+                                .replace(/&amp;/g,'')
+                                + text.substring(index));
                             }
                           </scriptfilter>
                           <scriptfilter language="javascript">
@@ -187,7 +198,12 @@
                               fileName = element.substring(indexA+5, indexB);
                                     
                               indexA = element.indexOf('[');
-                              section = element.substring(indexB+1, indexA).toLowerCase();
+                              section = element.substring(indexB+1, indexA);//.toLowerCase();;
+
+                              if (section.length > fileName.length){
+                                var sectionName = section.replace(fileName, '');
+                                section = section.replace(sectionName, sectionName.toLowerCase().replace(/-/g,''));
+                              }
 
                               var indexC = element.indexOf(']');
                               hyperlink = element.substring(indexA+1, indexC);
@@ -199,22 +215,20 @@
                             self.setToken(text);
                           </scriptfilter>
                           <scriptfilter language="javascript">
+                            // This script is used for replacing the '-' from xref:Section-Name
                             var text = self.getToken();
-                            var expr = /[&lt;][&lt;]([^,]+)(,)/g;
+                            var expr = /xref:([^[]+)+/g;
                             var result = text.match(expr);
                             if(result){
                               for (var i in result){
-                                  var element = result[i];
-                                  var indexA = element.indexOf('#');
-                                  var indexB = element.indexOf(',');
-                                  var section = element.substring(indexA+1, indexB);
-                                  var replacement = section.toLowerCase();
-                                  var nextReplacement = element.replace(section, replacement);
-                                  text = text.replace(element, nextReplacement);
+                                var element = result[i];
+                                text = text.replace(element, element.replace(/\-/g,''));
                               }
-                              self.setToken(text);
                             }
+                            self.setToken(text);                            
                           </scriptfilter>
+                          <replaceregex pattern="^(=) (.*)" replace="[[${currentfilename}]]${line.separator}\1 \2" flags="g"/>
+                          <replaceregex pattern="xref:([^#:]*)\[([^#:]*)\]" replace="&lt;&lt;${currentfilename}_\1,\2>>" flags="g"/>
                         </tokenfilter>
                       </filterchain>
                     </copy>

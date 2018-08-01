@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.oasp</groupId>
   <artifactId>oasp-docgen</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description>Documentation generator that can generate a complete and self-contained documentation as PDF, ePub and HTML from Asciidoc Wiki pages.</description>
@@ -72,6 +72,11 @@
         <artifactId>maven-site-plugin</artifactId>
         <version>3.7.1</version>
       </plugin>
+	  <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -323,6 +328,41 @@
         </plugins>
       </build>
     </profile>
+	
+	<profile>
+      <id>oss</id>
+      <build>
+        <plugins>          
+          <!-- Sign artifacts with PGP -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <keyname>${oasp.gpg.keyname}</keyname>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+    </profile>
 
     <profile>
       <id>custom-style</id>
@@ -364,17 +404,4 @@
       </build>
     </profile>
   </profiles>
-
-  <distributionManagement>
-    <repository>
-      <id>devon.releases</id>
-      <name>Devon Nexus Releases</name>
-      <url>https://devon.s2-eu.capgemini.com/nexus/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>devon.snapshots</id>
-      <name>Devon Nexus Snapshots</name>
-      <url>https://devon.s2-eu.capgemini.com/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
